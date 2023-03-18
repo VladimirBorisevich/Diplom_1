@@ -1,25 +1,44 @@
 package praktikum;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(Parameterized.class)
 public class BunTest {
-    Bun bun;
+    String name;
+    float price;
 
-    @Before
-    public void setUp() {
-        bun = new Bun("Белый хлеб", 50);
+    public BunTest(String name, float price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    @Parameterized.Parameters
+    public static Object[][] getData() {
+        return new Object[][]{
+                {null, 0},
+                {"", 1},
+                {"white bread", -1},
+                {"gre{*_)@}", Float.NaN},
+                {"234rfew32", (float) -3E+38},
+                {"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", Float.MAX_VALUE},
+                {"erg", Float.MAX_VALUE + 1},
+                {"ывптwerfo123ХЪ{*3%$#}", Float.MIN_VALUE}
+        };
     }
 
     @Test
     public void checkGetNameCorrectReturn() {
-        assertEquals("Name should equals to Белый хлеб", bun.getName(), "Белый хлеб");
+        Bun bun = new Bun(name, price);
+        assertEquals("Названия должны быть равны", bun.getName(), name);
     }
 
     @Test
     public void checkGetPriceCorrectReturn() {
-        assertEquals("Price should equals to 50", bun.getPrice(), 50, 0);
+        Bun bun = new Bun(name, price);
+        assertEquals("Цена должна быть равна", bun.getPrice(), price, 0);
     }
 }
